@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Cat Cloud</title>
+</head>
+
+<body>
+    <h1>Welcome to...</h1>
+    <img th:src="@{/images/CatCloud.png}" />
+    <!-- 
+        注意：
+        1. 这里 th:src属性 和 @{...}表达式 使用了 Thymeleaf 的模板语言。
+        2. 路径 /images/CatCloud.png 使用了相对路径，详见相对路径规范。
+        这里：
+        - 以 / 开头的相对路径是相对于网站的根路径，
+        - 在 Spring Web 应用中，网站的根路径默认是 /src/main/resources/static
+        所以：
+        - /images/CatCloud.png 指向的就是 /src/main/resources/static/images/CatCloud.png 
+    -->
+</body>
+
+</html>
