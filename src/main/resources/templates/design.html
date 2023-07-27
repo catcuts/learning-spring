@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cat Cloud</title>
+    <link rel="stylesheet" th:href="@{/styles.css}">
+</head>
+<body>
+    <h1>Design your cat!</h1>
+    <img th:src="@{/images/CatCloud.png}" />
+
+    <form method="POST" th:object="${cat}">
+        <div class="grid">
+            <div th:each="ingredientMap : ${ingredientsMap}" 
+                class="ingredient-group" id="${ingredientMap.key}"
+            >
+                <h3>Designate your <span th:text="${ingredientMap.key}"></span></h3>
+                <div th:each="ingredient : ${ingredientMap.value}">
+                    <input type="checkbox"
+                        th:field="*{ingredients}"
+                        th:value="${ingredient.id}"
+                        th:id="${ingredient.id}"
+                    />
+                    <span th:text="${ingredient.name}">INGREDIENT</span><br/>
+                </div>
+            </div>
+        </div>
+        <div>
+            <h3>Name your cat creation:</h3>
+            <input type="text" th:field="*{name}"/>
+        </div>
+        <button>Submit Your Cat</button>
+    </form>
+</body>
+</html>
