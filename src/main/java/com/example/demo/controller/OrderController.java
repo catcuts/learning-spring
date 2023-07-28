@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import javax.validation.Valid;
+import org.springframework.validation.Errors;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,10 +25,16 @@ public class OrderController {
 
     @PostMapping
     public String processOrder(
-        CatOrder catOrder, 
+        @Valid CatOrder catOrder, Errors errors, 
         SessionStatus sessionStatus
     ) {
         log.info("喵喵喵，Processing order: " + catOrder);
+
+        if (errors.hasErrors()) {
+            log.info("喵喵喵，Error Processing order: " + catOrder + ", errors: " + errors);
+            return "orderForm";
+        }
+
         sessionStatus.setComplete();
         return "redirect:/";
     }

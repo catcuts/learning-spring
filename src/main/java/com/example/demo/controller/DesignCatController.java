@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+import org.springframework.validation.Errors;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -88,7 +90,7 @@ public class DesignCatController {
 
     @PostMapping
     public String processDesign(
-        Cat cat,
+        @Valid Cat cat, Errors errors,
         @ModelAttribute("catOrder") CatOrder catOrder  // 这个 <注解(在方法参数上)> 的作用是 将 <model 中的 catOrder 对象> 绑定至 <该方法参数>，
                                                        // 其中，<model 中的 catOrder 对象> 是 @ModelAttribute(name = "catOrder") 注解在 <本类的catOrder属性> 上添加的。
                                                        // 即这段代码：
@@ -98,6 +100,12 @@ public class DesignCatController {
                                                        //     }
     ) {
         log.info("喵喵喵，Processing design: " + cat);
+
+        if (errors.hasErrors()) {
+            log.info("喵喵喵，Error Processing design: " + cat + ", errors: " + errors);
+            return "design";
+        }
+
         catOrder.addDesign(cat);
         return "redirect:/orders/current";
     }
