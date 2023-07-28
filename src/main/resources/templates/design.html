@@ -15,7 +15,7 @@
     <form method="POST" th:object="${cat}">
         <div class="grid">
             <div th:each="ingredientMap : ${ingredientsMap}" 
-                class="ingredient-group" id="${ingredientMap.key}"
+                class="ingredient-group" th:id="${ingredientMap.key}"
             >
                 <h3>Designate your <span th:text="${ingredientMap.key}"></span></h3>
                 <div th:each="ingredient : ${ingredientMap.value}">

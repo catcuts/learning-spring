@@ -10,7 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-// import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
@@ -69,7 +69,7 @@ public class DesignCatController {
 
     @ModelAttribute(name = "catOrder")  // 这个注解的作用是将 catOrder 对象添加到 数据模型 model 中，
                                         // 它会在所有的处理器方法执行之前执行。
-    public CatOrder order() {
+    public CatOrder catOrder() {
         return new CatOrder();
     }
 
@@ -84,6 +84,22 @@ public class DesignCatController {
         log.info("喵喵喵，Designing cat");
         addIngredientsToModel(model);  // 向模型中添加 Ingredient 对象列表
         return "design";  // 返回视图名，由模板引擎解析为具体视图
+    }
+
+    @PostMapping
+    public String processDesign(
+        Cat cat,
+        @ModelAttribute("catOrder") CatOrder catOrder  // 这个 <注解(在方法参数上)> 的作用是 将 <model 中的 catOrder 对象> 绑定至 <该方法参数>，
+                                                       // 其中，<model 中的 catOrder 对象> 是 @ModelAttribute(name = "catOrder") 注解在 <本类的catOrder属性> 上添加的。
+                                                       // 即这段代码：
+                                                       //     @ModelAttribute(name = "catOrder")
+                                                       //     public CatOrder catOrder() {
+                                                       //         return new CatOrder();
+                                                       //     }
+    ) {
+        log.info("喵喵喵，Processing design: " + cat);
+        catOrder.addDesign(cat);
+        return "redirect:/orders/current";
     }
 
     private List<Ingredient> filterIngredientsByType(List<Ingredient> ingredients, Ingredient.Type type) {
