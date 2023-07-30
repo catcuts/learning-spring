@@ -1,2 +1,9 @@
 server:
     port: 8089
+spring:
+    datasource:
+        # 是否给数据源生成一个随机名称
+        generate-unique-name: false
+        # 数据源名称（即数据库名称）
+        name: catcloud  # 如果是使用 mysql 数据库，那么对应的数据库连接 url = jdbc:mysql://localhost:3306/catcloud
+                        # 如果是使用 h2 数据库，那么对应的数据库连接 url = jdbc:h2:mem:catcloud

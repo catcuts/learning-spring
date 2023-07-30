@@ -1,5 +1,6 @@
 package com.example.demo.domain;
 
+import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
 import javax.validation.constraints.Digits;
@@ -10,6 +11,10 @@ import lombok.Data;
 
 @Data
 public class CatOrder {
+
+    private Long id;  // id 属性作为数据库表中的主键即 Cat 对象的唯一标识
+
+    private Date placedAt = new Date();  // createdAt 属性用于存储 CatOrder 对象的下单时间
 
     @NotBlank(message="Delivery name is required")
     private String deliveryName;
