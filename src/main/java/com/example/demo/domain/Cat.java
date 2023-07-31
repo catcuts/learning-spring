@@ -21,6 +21,6 @@ public class Cat {
     @NotNull  // 校验以确保 ingredients 属性的值不能为空
     @Size(min=1, message="You must choose at least 1 ingredient")  // 校验以确保 ingredients 属性的值（列表）至少包含 1 个元素
                                                                    // （否则会提示 message 属性中的消息）
-    private List<Ingredient> ingredients;
+    private List<CatIngredient> ingredients;
 
 }

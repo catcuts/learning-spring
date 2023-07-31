@@ -69,13 +69,13 @@ public class JdbcCatOrderRepository implements CatOrderRepository {
         List<Cat> cats = catOrder.getCats();
         int i = 0;
         for (Cat cat : cats) {
-            saveCatToCatOrder(catOrderId, i++, cat);
+            saveCat(catOrderId, i++, cat);
         }
 
         return catOrder;
     }
 
-    private long saveCatToCatOrder(long catOrderId, int orderKey, Cat cat) {
+    private long saveCat(long catOrderId, int orderKey, Cat cat) {
         cat.setCreatedAt(new Date());
         PreparedStatementCreatorFactory pscf = 
             new PreparedStatementCreatorFactory(
@@ -109,9 +109,9 @@ public class JdbcCatOrderRepository implements CatOrderRepository {
         int i = 0;
         for (CatIngredient catIngredient : catIngredients) {
             jdbcOperations.update(
-                "INSERT INTO Cat_Ingredient (cat_id, ingredient_id, ingredient_key) "
+                "INSERT INTO Cat_Ingredient (cat_id, cat_key, ingredient_id) "
                 +"VALUES (?, ?, ?)",
-                catId, catIngredient.getIngredientId(), i++
+                catId, i++, catIngredient.getIngredientId()
             );
         }
     }
