@@ -69,29 +69,29 @@ public class JdbcCatOrderRepository implements CatOrderRepository {
         List<Cat> cats = catOrder.getCats();
         int i = 0;
         for (Cat cat : cats) {
-            saveCat(catOrderId, i++, cat);
+            saveCat(cat, catOrderId, i++);
         }
 
         return catOrder;
     }
 
-    private long saveCat(long catOrderId, int orderKey, Cat cat) {
+    private long saveCat(Cat cat, long catOrderId, int orderKey) {
         cat.setCreatedAt(new Date());
         PreparedStatementCreatorFactory pscf = 
             new PreparedStatementCreatorFactory(
                 "INSERT INTO Cat "
                 +"(name, cat_order_id, cat_order_key, createdAt) "
                 +"VALUES (?, ?, ?, ?)",
-                Types.VARCHAR, Type.LONG, Type.LONG
+                Types.VARCHAR, Type.LONG, Type.LONG, Types.TIMESTAMP
             );
         pscf.setReturnGeneratedKeys(true);
 
         PreparedStatementCreator psc = pscf.newPreparedStatementCreator(
             Arrays.asList(
                 cat.getName(),
-                cat.getCreatedAt(),
                 catOrderId,
-                orderKey
+                orderKey,
+                cat.getCreatedAt()
             )
         );
 

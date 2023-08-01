@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS Cat_Ingredient (
 
 -- 创建 Ingredient 表
 CREATE TABLE IF NOT EXISTS Ingredient (
-  id    VARCHAR(50) NOT NULL,
+  id    VARCHAR(50) NOT NULL PRIMARY KEY,
   name  VARCHAR(50) NOT NULL,
   type  VARCHAR(50) NOT NULL
 );
