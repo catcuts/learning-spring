@@ -1,5 +1,11 @@
 package com.example.demo.repository;
 
+/*  
+    无需 JdbcCatOrderRepository 类，因为：
+      - CatOrderRepository 继承了 CrudRepository 接口，该接口已定义常见的数据库操作方法。
+      - Spring Data 会在运行时自动实现 CatOrderRepository 继承的接口方法，即常见数据库操作方法。
+      - 因此无需 JdbcCatOrderRepository 类来实现 CatOrderRepository 继承的接口方法（除非要自定义实现）。
+
 import java.sql.Types;
 import java.util.Arrays;
 import java.util.Date;
@@ -117,3 +123,4 @@ public class JdbcCatOrderRepository implements CatOrderRepository {
     }
 
 }
+*/

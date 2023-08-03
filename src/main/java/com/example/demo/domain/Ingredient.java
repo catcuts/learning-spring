@@ -34,12 +34,11 @@ import lombok.AccessLevel;
                                                                 // 参考：书中 3.3.2 节 或 https://stackoverflow.com/questions/68314072/why-to-use-allargsconstructor-and-noargsconstructor-together-over-an-entity
                                                                 // 注：虽然相关的参考或问答大都是针对 JPA 的，但不论是 Spring Data JDBC 还是 Spring Data JPA，其数据持久化过程都是需要通过反射来创建所需类实例的。
 public class Ingredient implements Persistable<String> {
-    // 注：
     
     @Id
-    private final String id;
-    private final String name;
-    private final Type type;
+    private String id;
+    private String name;
+    private Type type;
 
     public static enum Type {
         WRAP, PROTEIN, VEGGIES, CHEESE, SAUCE

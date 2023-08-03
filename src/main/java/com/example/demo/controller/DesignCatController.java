@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.stream.Collectors;
@@ -54,7 +55,10 @@ public class DesignCatController {
     public void addIngredientsToModel(Model model) {
         
         // 代替原来的硬编码方式，从数据库中获取 Ingredient 对象列表
-        List<Ingredient> ingredients = ingredientRepository.findAll();
+        // 注：这里需要将 findAll() 方法返回的 Iterable<Ingredient> 对象转换为 List<Ingredient> 对象，才能符合下面的 filterIngredientsByType() 方法参数的类型要求。
+        List<Ingredient> ingredients = new ArrayList<>();
+        ingredientRepository.findAll().forEach(ingredients::add);  // 这里 ingredient::add 使用了方法引用，等效于使用 Lambda 表达式 x -> ingredient.add(x)。
+                                                                   // 方法引用相对于Lambda表达式更加简洁直观，适用于简单操作，而Lambda表达式适用于复杂操作。
         // // 在引入数据库之前，先使用硬编码的方式来创建 Ingredient 对象列表
         // List<Ingredient> ingredients = Arrays.asList(
         //     new Ingredient("FLTO", "Flour Tortilla", Ingredient.Type.WRAP),
@@ -71,7 +75,7 @@ public class DesignCatController {
 
         // 在得到 Ingredient 对象列表后，将其格式化成 Map映射 后添加到数据模型中
         // 先初始化 ingredientsMap 对象并添加到数据模型中
-        Map<String, List<Ingredient>> ingredientsMap = new HashMap<>();  
+        Map<String, Iterable<Ingredient>> ingredientsMap = new HashMap<>();  
         model.addAttribute("ingredientsMap", ingredientsMap);
         Ingredient.Type[] ingredientTypes = Ingredient.Type.values();
         for (Ingredient.Type ingredientType : ingredientTypes) {
@@ -126,7 +130,7 @@ public class DesignCatController {
         return "redirect:/orders/current";
     }
 
-    private List<Ingredient> filterIngredientsByType(List<Ingredient> ingredients, Ingredient.Type type) {
+    private Iterable<Ingredient> filterIngredientsByType(List<Ingredient> ingredients, Ingredient.Type type) {
         return ingredients
             .stream()  // 将 ingredients 转换为流，以便使用流操作
             .filter(x -> x.getType().equals(type))  // 过滤出类型为 type 的 Ingredient 对象

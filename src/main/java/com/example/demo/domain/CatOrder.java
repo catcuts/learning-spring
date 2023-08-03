@@ -27,12 +27,12 @@ public class CatOrder implements Serializable {
     @Id  // 这个注解的作用是声明 id 属性为数据库相应表（Cat_Order表）中的主键
     private Long id;  // id 属性作为数据库表中的主键即 CatOrder 对象的唯一标识
 
-    private Date placedAt = new Date();  // createdAt 属性用于存储 CatOrder 对象的下单时间
+    private Date placedAt = new Date();  // placedAt 属性用于存储 CatOrder 对象的下单时间
 
-    // 其它属性也会自动映射到数据库表中相应的字段，例如：name、createdAt、ingredients 等。
+    // 其它属性也会自动映射到数据库表中相应的字段，例如：name、placedAt、ingredients 等。
     // 也可以显式地使用 @Column 注解来指定属性与数据库表中字段的映射关系，例如：
 
-    @Column("customer_name")
+    @Column("CUSTOMER_NAME")
     @NotBlank(message="Delivery name is required")
     private String deliveryName;
 

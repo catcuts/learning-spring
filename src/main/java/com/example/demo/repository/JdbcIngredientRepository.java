@@ -1,5 +1,6 @@
 package com.example.demo.repository;
 
+/*
 import java.util.List;
 import java.util.Optional;
 
@@ -11,10 +12,10 @@ import org.springframework.stereotype.Repository;
 
 import com.example.demo.domain.Ingredient;
 
-/**
+**
  * 注：这是一个 IngredientRepository 的实现类，
  *     它基于 JdbcTemplate 技术来实现 IngredientRepository 接口中定义的方法。
- */
+ *
 @Repository
 public class JdbcIngredientRepository implements IngredientRepository {
 
@@ -51,11 +52,11 @@ public class JdbcIngredientRepository implements IngredientRepository {
             Optional.of(results.get(0));  // 构造一个包含指定值的 Optional 对象
     }
 
-    /**
+    **
      * 注：
      *     这个 RowMapper 的实现没有直接 implements org.springframework.jdbc.core.RowMapper 接口，也是可行的。
      *     只要这个函数的返回值类型是 Ingredient（在此示例中），且它的参数列表是 ResultSet 和 int，那么它就是一个可用的 RowMapper 的实现。
-     */
+     *
     private Ingredient mapRowToIngredient(ResultSet row, int rowNum) throws SQLException {
         return new Ingredient(
             row.getString("id"),
@@ -76,3 +77,4 @@ public class JdbcIngredientRepository implements IngredientRepository {
     }
 
 }
+*/
