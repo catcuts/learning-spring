@@ -1,7 +1,11 @@
 package com.example.demo.domain;
 
-import org.springframework.data.relational.core.mapping.Table;
-import org.springframework.data.annotation.Id;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+// 如果使用 Spring Data JPA 那么需要用上面两个注解代替 Spring Data JDBC 的下面两个注解
+// import org.springframework.data.relational.core.mapping.Table;
+// import org.springframework.data.annotation.Id;
+
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.domain.Persistable;
 
@@ -11,7 +15,7 @@ import lombok.NoArgsConstructor;
 import lombok.AccessLevel;
 
 @Data
-@Table
+@Entity
 @AllArgsConstructor  // 这个注解的作用是生成一个包含所有属性的构造函数，例如：
                      //     public Ingredient(String id, String name, Type type) {
                      //         this.id = id;
