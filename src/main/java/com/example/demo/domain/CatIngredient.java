@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class CatIngredient {
 
-    private final String ingredientId;
+    private final String ingredient;
 
 }

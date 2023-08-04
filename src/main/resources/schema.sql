@@ -64,11 +64,17 @@ CREATE TABLE IF NOT EXISTS Cat (
   name          VARCHAR(50) NOT NULL,
   cat_order     BIGINT NOT NULL,  /* 将原来的 cat_order_id 改名为 cat_order 因为：
                                      - 它将作为一个外键，引用 Cat_Order 表的 id 列
-                                       （见 ALTER TABLE Cat ... ADD FORENGIN KEY ...）；
+                                       （见 ALTER TABLE Cat ... ADD FOREIGN KEY (外键字段名) REFERENCES Cat_Order (id);）；
                                      - Spring Data 会根据 Cat 的外键约束，
                                        每当 Cat_Order 表创建一条记录，它就会在 Cat 表自动创建一条记录，
-                                       而在创建这条 Cat 表记录时，它会认为其外键值（Cat_Order 表的 id 列的值）应放在其 cat_order 列中。 
-                                  因此，如果保持原来的 cat_order_id 列名，Spring Data 在创建这条 Cat 表记录时，就会报错说 cat_order 列不存在。
+                                       而在创建这条 Cat 表记录时，
+                                           如果约束中的“外键字段”没有在实体类/领域类/数据类中找到对应的属性
+                                           （例如：如果外键字段名=cat_order_id，那么对应的属性应为 CatOrderId 或 cat_order_id），
+                                           那么它会认为其外键值（Cat_Order 表的 id 列的值）应放在其 cat_order 列中。
+                                  因此，如果：
+                                         - 保持原来的 cat_order_id 列名，
+                                         - 并且在 Cat 实体类/领域类/数据类中没有定义对应的属性（CatOrderId 或 cat_order_id）
+                                       那么Spring Data 在创建这条 Cat 表记录时，就会报错说 cat_order 列不存在。
                                   例如：Caused by: org.springframework.jdbc.BadSqlGrammarException: PreparedStatementCallback; 
                                         bad SQL grammar [INSERT INTO "CAT" ("CAT_ORDER", "CAT_ORDER_KEY", "CREATED_AT", "NAME") VALUES (?, ?, ?, ?)]; 
                                         nested exception is org.h2.jdbc.JdbcSQLSyntaxErrorException: Column "CAT_ORDER" not found; SQL statement:
@@ -82,7 +88,10 @@ CREATE TABLE IF NOT EXISTS Cat (
 CREATE TABLE IF NOT EXISTS Cat_Ingredient (
   cat         BIGINT NOT NULL,  /* cat_id 改为 cat。参考 Cat 表的 cat_order 字段说明。 */
   cat_key     BIGINT NOT NULL,
-  ingredient_id  VARCHAR(50) NOT NULL  /* TODO: 【疑】ingredient_id 改为 ingredient。参考 Cat 表的 cat_order 字段说明。 */
+  ingredient  VARCHAR(50) NOT NULL  /* ingredient_id 改为 ingredient。参考 Cat 表的 cat_order 字段说明。 
+                                       同时注意：CatIngredient 类中，原来命名为 ingredientId 的属性名应改为 ingredient。
+                                                否则会报错 ingredient_id 列不存在。
+                                    */
 );
 
 -- 创建 Ingredient 表
@@ -102,4 +111,4 @@ ALTER TABLE Cat
 -- 这个外键约束的作用是：Cat_Ingredient 表中的 ingredient 列的值（作为外键）必须引用 Ingredient 表中 name 列的值。
 ALTER TABLE Cat_Ingredient 
     ADD CONSTRAINT FK_Cat_Ingredient_Ingredient 
-    FOREIGN KEY (ingredient_id) REFERENCES Ingredient (id);
+    FOREIGN KEY (ingredient) REFERENCES Ingredient (id);
