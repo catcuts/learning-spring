@@ -52,17 +52,62 @@ public class Ingredient implements Persistable<String> {
     // @Transient  // 注：默认情况下这里无需使用 @Transient 注解，因为 Spring Data 默认的访问类型是 AccessType.FIELD，
                    //     也就是访问属性来持久化而不是访问 getter/setter，因此 new 不会被 Spring Data 访问并持久化到数据库
                    //     （如果要使用 getter/setter 的访问方式那么 Spring Data 的访问类型应设为 AccessType.PROPERTY）。
-    public boolean isNew() {
-        return true;  // 注：isNew() 实现是用于 Spring Data 在持久化之前调用它来判断对象是否是要新建的（is new），
-                      //     一种实现方式是直接返回 true，这样 Spring Data 就会直接认为这个对象是新建的，从而在持久化时直接执行 insert 操作，否则执行 update 操作。
-                      //     这种实现的原因是因为没有实现 getId() 方法，从而这个对象的 id 属性是由数据库自动生成的，因此在持久化之前是无法确定这个对象是否是新建的。
-                      //     如果实现了 getId() 方法，从而这个对象的 id 属性是由应用程序生成的，那么就可以根据 id 属性是否为 null 来判断这个对象是否是新建的，
-                      //     例如：
-                      //         @Override
-                      //         public boolean isNew() {
-                      //             return this.id == null;
-                      //         }
-                      //     这样 Spring Data 就会根据 id 属性是否为 null 来判断这个对象是否是新建的，从而在持久化时执行 insert 或 update 操作。
+    public boolean isNew() {  // 注：isNew() 用于 Spring Data 在持久化之前调用它来判断对象是否是要新建的（is new）。
+        return true;          //     它有几种可能的实现方式：
+                              //
+                              //     1. 一种实现方式是直接返回 true，这样 Spring Data 就会直接认为这个对象是新建的，
+                              //        从而在持久化时直接执行 insert 操作，而不会执行 update 操作。
+                              //        这种实现的一种可能应用场景是这个类对应的表只需要新增而不需要更新（例如演示用法的场景）。
+                              // 
+                              //     2. 另一种是实现方式是根据对象的 id 属性是否为 null 来判断这个对象是否是新建的。
+                              //        例如：
+                              //            @Override
+                              //            public boolean isNew() {
+                              //                return this.id == null;  // 如果 id 属性为 null，那么就认为这个对象是新建的
+                              //            }
+                              //        这样 Spring Data 就会根据 id 属性是否为 null 来判断这个对象是否是新建的，
+                              //        从而在持久化时执行 insert 或 update 操作。
+                              //        这种实现方式需要：
+                              //            1) 应用层在调用 save(对象实例) 方法时，其中实例化对象时，如果是新建对象那么就不要设置 id 属性。
+                              //            2) 搭配数据库相应表的主键预设的生成规则或 @GeneratedValue 注解来自动生成主键值。
+                              //               注：
+                              //                   1> 数据库表的主键预设生成规则是在创建表的时候指定的，例如：
+                              //                       CREATE TABLE IF NOT EXISTS Cat (
+                              //                           id            IDENTITY,  /* 指定 id 的生成规则为自增长 */
+                              //                           ...
+                              //                       )
+                              //                   2> @GeneratedValue 注解的主键属性（例如 id）并不会在对象实例化时自动生成该主键属性的值，
+                              //                   而是在持久化时，根据：
+                              //                       - 指定的生成策略（例如 GenerationType.IDENTITY、GenerationType.AUTO 等）
+                              //                       - 数据库的不同实现（例如 MySQL、PostgreSQL 等，注意有些数据库实现不支持某些主键生成策略）
+                              //                   自动（例如自动构造相关数据库语句）生成主键字段的值。
+                              //                   注：主键生成策略解释和用法可参考：
+                              //                       - [GenerationType各类型解释](https://blog.51cto.com/u_15127550/4396255)
+                              //                       - [GenerationType各类型用法](https://fanlychie.github.io/post/jpa-generatedvalue-annotation.html)
+                              //        
+                              //     3. 还有一种方式是根据对象是否保存到数据库或者从数据库中读取出来来判断这个对象是否是新建的。
+                              //        这种方式需要搭配 Spring Data JPA 的 @PrePersist 和 @PostLoad 注解来实现。
+                              //        例如：
+                              //            [摘自官方示例](https://docs.spring.io/spring-data/jpa/docs/2.2.6.RELEASE/reference/html/#jpa.entity-persistence.saving-entites.strategies)
+                              //            @MappedSuperclass  // 这个注解的作用是将这个类标记为超类，即这个类的属性会被子类继承。这是为了能实现一个抽象类封装一些通用逻辑（例如这里的 isNew 逻辑）以便继承来复用。
+                              //            public abstract class AbstractEntity<ID> implements Persistable<ID> {
+                              //
+                              //                @Transient  // 这个注解的作用是将这个属性标记为非持久化属性，即这个属性不会被持久化到数据库。
+                              //                private boolean isNew = true;   // 标记为私有属性，防止外部访问/修改。
+                              //  
+                              //                @Override
+                              //                public boolean isNew() {
+                              //                    return isNew; 
+                              //                }
+                              //  
+                              //                @PrePersist  // 在应用层调用了依赖此实体类的 Repository 实现的 save() 方法后，保存到数据库之前，将 isNew 属性设为 false，因为如果需要保存到数据库那么就可以认为这个对象不是新建的。
+                              //                @PostLoad    // 在从数据库中读取出来之后，将 isNew 属性设为 false，因为如果能从数据库中读取出来那么就可以这个对象不是新建的。
+                              //                void markNotNew() {
+                              //                    this.isNew = false;
+                              //                }
+                              //  
+                              //                // More code…
+                              //            }
     }
 
 }
