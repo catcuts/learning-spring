@@ -23,15 +23,14 @@ import lombok.AccessLevel;
                      //         this.type = type;
                      //     }
                      // 这样就可以使用这个构造函数来创建 Ingredient 对象了（注：这不是出于 Spring Data 的需要）。
-@NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)  // 这个注解的作用是 *确保* 这个类有一个无参构造函数，
+@NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)  // 这个注解的作用是 *确保* 这个类有一个无参构造函数，即使这个类已经定义了其它的构造函数
                                                                 // 因为 Spring Data 需要通过反射来创建这个类的实例，以便进行数据持久化。
                                                                 // 同时这个注解设定了：
                                                                 //    - access = AccessLevel.PRIVATE，
                                                                 //      即设定无参构造函数的访问权限是 private（私有），
                                                                 //      这样就避免被反射之外的其它方式代码调用（例如使用Class.newInstance()或Constructor.newInstance()等方法）。
                                                                 //    - force = true，
-                                                                //      即强制生成这个无参构造函数，即使这个类已经定义了其它的构造函数。
-                                                                //      *确保*的关键在于这个 force = true。
+                                                                //      即设定基于无参构造函数创建的类实例属性的初始值为 0/null/false（根据相应属性的类型）。
                                                                 // 为什么说是 *确保* 呢？因为：
                                                                 //    - Java 会为每个类自动生成一个无参构造函数，但是只有当这个类没有定义其它构造函数时才会生成；
                                                                 //    - 如果没有这个注解，那么当这个类已经定义了其它的构造函数时，Java 就不会为这个类自动生成无参构造函数了。
