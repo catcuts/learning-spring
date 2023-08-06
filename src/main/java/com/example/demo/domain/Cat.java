@@ -9,6 +9,8 @@ import javax.validation.constraints.Size;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.ManyToMany;
+import javax.persistence.JoinTable;
+import javax.persistence.JoinColumn;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -63,11 +65,16 @@ public class Cat {
                    //             inverseJoinColumns=@JoinColumn(name="ingredient_id")
                    //         )
                    //         private List<Ingredient> ingredients;
-                   //   - 作为*被拥有者*，实体类（Ingredient）上也可注解 @ManyToMany 在其某个属性（cats）上，从而成为另一端（Cat）的“拥有者”（owner）。
+                   //   - 作为*被拥有者*，实体类（Ingredient）上也可（但非必须）注解 @ManyToMany 在其某个属性（cats）上，从而成为另一端（Cat）的“拥有者”（owner）。
                    //     此时：
                    //       - 实体类（Ingredient）实例所拥有的另一实体类（Cat）实例的集合（cats）会被放入 cats 属性中。
                    //       - 实体类（Ingredient）上无需重复注解 @JoinTable 配置相同的中间表信息，只需注解 @ManyToMany 并指定 mappedBy 属性即可。
                    //         例如：@ManyToMany(mappedBy="<拥有者 @ManyToMany 所注解的属性名称（ingredients）>") 
+    // @JoinTable(
+    //     name="Cat_Ingredient",
+    //     joinColumns=@JoinColumn(name="cat"),
+    //     inverseJoinColumns=@JoinColumn(name="ingredient")
+    // )
     private List<Ingredient> ingredients;
 
 }

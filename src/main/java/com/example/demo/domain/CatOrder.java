@@ -9,8 +9,11 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.CreditCardNumber;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+
 // 如果使用 Spring Data JPA 那么需要用上面两个注解代替 Spring Data JDBC 的下面两个注解
 // import org.springframework.data.relational.core.mapping.Table;
 // import org.springframework.data.annotation.Id;
@@ -72,6 +75,10 @@ public class CatOrder implements Serializable {
     )  // 使用 @Digits 注解来验证 ccCVV 属性的值是否是一个三位数
     private String ccCVV;
 
+    @OneToMany(cascade = CascadeType.ALL)  // @OneToMany 注解声明了这个实体类（CatOrder）与另一个实体类（Cat）建立的数据表上的一对多关系，
+                                           // 也就是 CatOrder 表与 Cat 表之间通过 CatOrder 表的 id 字段建立的一对多关系，
+                                           // 即一个 CatOrder 对象可以拥有多个 Cat 对象，它们被放入 cats 属性中。
+                                           // 同时，这个注解还声明了级联操作，即当 CatOrder 对象（及其映射的表记录）被删除时，其所拥有的 Cat 对象（及其映射的表记录）也会被删除。
     private List<Cat> cats = new ArrayList<>();
 
     public void addDesign(Cat cat) {

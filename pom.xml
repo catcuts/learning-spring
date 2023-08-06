@@ -33,21 +33,7 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
-            <exclusions>
-                <!-- 排除默认的 hibernate 因为项目要用其它的 jpa 实现 -->
-                <exclusion>
-                    <groupId>org.hibernate</groupId>
-                    <artifactId>hibernate-core</artifactId>
-                </exclusion>
-            </exclusions>
 		</dependency>
-        <!-- 使用 eclipselink 作为项目所用的 jpa 实现 -->
-        <!-- 注：作为同一个 jpa 规范的不同实现，一般情况下，切换到不同 jpa 实现，是无需修改业务代码的，除非用到了基于 jpa 扩展的功能 -->
-        <dependency>
-            <groupId>org.eclipse.persistence</groupId>
-            <artifactId>org.eclipse.persistence.jpa</artifactId>
-            <version>2.7.7</version>
-        </dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jdbc</artifactId>
