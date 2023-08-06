@@ -9,14 +9,18 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.CreditCardNumber;
 
-import org.springframework.data.annotation.Id;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+// 如果使用 Spring Data JPA 那么需要用上面两个注解代替 Spring Data JDBC 的下面两个注解
+// import org.springframework.data.relational.core.mapping.Table;
+// import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
-import org.springframework.data.relational.core.mapping.Table;
 
 import lombok.Data;
 
 @Data
-@Table
+/*@Table*/
+@Entity  // 使用 @Entity 代替 @Table 注解，以获得更多实体特性（包括实体映射、实体关系、实体生命周期）
 public class CatOrder implements Serializable {
     // 注：实现 Serializable 接口的作用是使得 CatOrder 对象可以在网络上传输，例如在 HTTP 请求中传输。
     //     考虑到订单对象需要在客户端和服务端之间传输，因此需要实现 Serializable 接口。
