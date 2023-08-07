@@ -7,3 +7,6 @@ spring:
         # 数据源名称（即数据库名称）
         name: catcloud  # 如果是使用 mysql 数据库，那么对应的数据库连接 url = jdbc:mysql://localhost:3306/catcloud
                         # 如果是使用 h2 数据库，那么对应的数据库连接 url = jdbc:h2:mem:catcloud
+    jpa:
+        # 是否将数据的初始化推迟到数据库被访问时，因为使用 h2 如果不推迟那么数据初始化会发生在 spring 启动时，而此时数据库还没有被创建，因此会报错。
+        defer-datasource-initialization: true

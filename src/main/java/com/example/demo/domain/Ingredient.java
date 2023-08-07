@@ -1,5 +1,7 @@
 package com.example.demo.domain;
 
+import javax.persistence.Enumerated;
+import javax.persistence.EnumType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 // 如果使用 Spring Data JPA 那么需要用上面两个注解代替 Spring Data JDBC 的下面两个注解
@@ -44,6 +46,7 @@ public class Ingredient /*implements Persistable<String>*/ {
     @Id
     private String id;
     private String name;
+    @Enumerated(EnumType.STRING)
     private Type type;
 
     public static enum Type {

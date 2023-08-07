@@ -5,7 +5,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+
 @SpringBootApplication
+@EnableJpaRepositories(basePackages = "com.example.demo.repository")
+@EntityScan(basePackages = "com.example.demo.domain")
 public class DemoApplication implements WebMvcConfigurer {
 
 	public static void main(String[] args) {
