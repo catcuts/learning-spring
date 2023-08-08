@@ -1,8 +1,3 @@
-delete from Cat_Ingredient;
-delete from Cat;
-delete from Cat_Order;
-
-delete from Ingredient;
 insert into Ingredient (id, name, type) 
                 values ('FLTO', 'Flour Tortilla', 'WRAP');
 insert into Ingredient (id, name, type)

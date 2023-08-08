@@ -35,7 +35,7 @@ public class CatOrder implements Serializable {
                                                       // 详见：https://zhuanlan.zhihu.com/p/347246506
 
     @Id  // 这个注解的作用是声明 id 属性为数据库相应表（Cat_Order表）中的主键
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;  // id 属性作为数据库表中的主键即 CatOrder 对象的唯一标识
 
     private Date placedAt = new Date();  // placedAt 属性用于存储 CatOrder 对象的下单时间

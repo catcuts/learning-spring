@@ -28,7 +28,7 @@ import lombok.Data;
 public class Cat {
 
     @Id  // 这个注解的作用是声明 id 属性为数据库相应表（Cat表）中的主键
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;  // id 属性作为数据库表中的主键即 Cat 对象的唯一标识
 
     // 其它属性也会自动映射到数据库表中相应的字段，例如：name、createdAt、ingredients 等。
