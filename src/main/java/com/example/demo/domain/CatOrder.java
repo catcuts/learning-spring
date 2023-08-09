@@ -16,6 +16,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.OneToMany;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 
 // 如果使用 Spring Data JPA 那么需要用上面两个注解代替 Spring Data JDBC 的下面两个注解
 // import org.springframework.data.relational.core.mapping.Table;
@@ -26,7 +27,7 @@ import lombok.Data;
 
 @Data
 /*@Table*/
-@Entity  // 使用 @Entity 代替 @Table 注解，以获得更多实体特性（包括实体映射、实体关系、实体生命周期）
+@Entity(name = "Cat_Order")  // 使用 @Entity 代替 @Table 注解，以获得更多实体特性（包括实体映射、实体关系、实体生命周期）
 public class CatOrder implements Serializable {
     // 注：实现 Serializable 接口的作用是使得 CatOrder 对象可以在网络上传输，例如在 HTTP 请求中传输。
     //     考虑到订单对象需要在客户端和服务端之间传输，因此需要实现 Serializable 接口。
@@ -83,6 +84,11 @@ public class CatOrder implements Serializable {
                                            // 也就是 CatOrder 表与 Cat 表之间通过 CatOrder 表的 id 字段建立的一对多关系，
                                            // 即一个 CatOrder 对象可以拥有多个 Cat 对象，它们被放入 cats 属性中。
                                            // 同时，这个注解还声明了级联操作，即当 CatOrder 对象（及其映射的表记录）被删除时，其所拥有的 Cat 对象（及其映射的表记录）也会被删除。
+    @JoinTable(
+        name = "Cat_Order_Cat", 
+        joinColumns = @JoinColumn(name = "cat_order_id"), 
+        inverseJoinColumns = @JoinColumn(name = "cat_id")
+    )
     private List<Cat> cats = new ArrayList<>();
 
     public void addDesign(Cat cat) {
