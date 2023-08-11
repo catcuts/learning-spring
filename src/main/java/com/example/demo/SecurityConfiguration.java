@@ -1,21 +1,19 @@
-package com.example.demo;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.ArrayList;
+    package com.example.demo;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
+
+import com.example.demo.domain.User;
+import com.example.demo.repository.UserRepository;
 
 @Configuration
-public class SecurityConfiguration {
+public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -23,23 +21,19 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
-        List<UserDetails> users = new ArrayList<>();
-        // 构造用户的两种方式：
-        //   方法1. 使用 User 类的构造器
-        users.add(new User(
-            "user", 
-            passwordEncoder.encode("password"), 
-            Arrays.asList(new SimpleGrantedAuthority("USER"))
-        ));
-        //   方法2. 使用 User 类的 withUsername()、password()、roles() 方法
-        users.add(User
-            .withUsername("admin")
-            .password(passwordEncoder.encode("password"))
-            .roles("USER", "ADMIN")
-            .build()
-        );
-        return new InMemoryUserDetailsManager(users);
+    public UserDetailsService userDetailsService(UserRepository userRepository) {
+        return username -> {
+            User user = userRepository.findByUsername(username);
+            if (user != null) return user;
+            else throw new UsernameNotFoundException("User '" + username + "' not found");
+        };
+    }
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web
+            .ignoring()
+            .antMatchers("/h2-console/**");
     }
 
 }
