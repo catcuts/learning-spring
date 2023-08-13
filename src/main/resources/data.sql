@@ -1,3 +1,6 @@
+insert into "USER" (id, username, password, fullname, street, city, state, zip, phoneNumber)
+                values (0, 'admin', '$2y$10$RW/MQyLYguVd9TXB/4C1tugPMr1hMBnsVKPFHSo7yc3Deji4H4bWy', 'admin', '', '', '', '', '');
+
 insert into Ingredient (id, name, type) 
                 values ('FLTO', 'Flour Tortilla', 'WRAP');
 insert into Ingredient (id, name, type)
