@@ -47,7 +47,7 @@ public class User implements UserDetails {  // 用户（User）实现了 UserDet
     // 获取用户的角色（已授予的权限）列表
     public Collection<? extends GrantedAuthority> getAuthorities() {
         // 这里暂定所有用户都是 USER 角色（USER 权限）
-        return Arrays.asList(new SimpleGrantedAuthority("USER"));
+        return Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
     }
 
     @Override

@@ -1,13 +1,24 @@
     package com.example.demo;
 
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+
+
+
 
 import com.example.demo.domain.User;
 import com.example.demo.repository.UserRepository;
@@ -37,18 +48,28 @@ public class SecurityConfiguration {
         //   3. 使用户能够退出应用
         //   4. 配置 CSRF 保护以预防 CSRF 攻击（Cross-Site Request Forgery，跨站请求伪造）
         return http
-            .authorizeHttpRequests()  // 认证 HTTP 请求时
-                .antMatchers("/h2-console/**")  // 对于这些请求
-                    .permitAll()  // 允许所有用户访问
-                .and().csrf().ignoringAntMatchers("/h2-console/**")  // 忽略对于这些请求的 CSRF 保护
-                .and().headers().frameOptions().sameOrigin()  // 允许同源的 iframe 访问
-            .and()
-            // 另一套配置
-            .authorizeHttpRequests()  // 认证 HTTP 请求时
-                .antMatchers("/design", "/orders")  // 对于这些请求
-                    .hasRole("USER")  // 要求用户具有 USER 角色（USER 权限）
-                .antMatchers("/", "/**")  // 对于这些请求
-                    .permitAll()  // 允许所有用户访问
+            .authorizeRequests()                               // 对于认证 HTTP 请求
+                .antMatchers("/h2-console/**")                     //   若匹配这些请求
+                    .permitAll()                                   //     则允许所有用户访问
+                    .and()                                             //   然后
+                        .csrf().ignoringAntMatchers("/h2-console/**")  //   忽略对于这些请求的 CSRF 保护
+                    .and()                                             //   然后
+                        .headers().frameOptions().sameOrigin()         //   允许同源的 iframe 访问
+            .and()  // 然后
+            // 另起一套配置，使上面的配置（例如允许同源 iframe 访问）只对于 /h2-console/** 请求生效
+            .authorizeRequests()                // 对于认证 HTTP 请求时
+                .antMatchers("/design", "/orders")  // 若匹配这些请求
+                    .hasRole("USER")                //   则要求用户具有 USER 角色（USER 权限）
+                .antMatchers("/", "/**")            // 若匹配这些请求
+                    .permitAll()                    //   则允许所有用户访问
+            .and()  // 然后
+                .formLogin()                             // 对于表单登录（基于表单的认证方式）
+                    .loginPage("/login")                 // 指定登录页面
+                    .defaultSuccessUrl("/design", true)  // 指定登录成功后的默认跳转页面
+                                                         //   第二个参数表示是否总是使用这个默认跳转页面，即使用户在登录前访问了其他页面
+            .and()  // 然后
+                .logout()                                // 对于退出登录
+                    .logoutSuccessUrl("/login")          // 指定退出登录成功后的默认跳转页面
             .and()  // and() 方法用于连接多个配置或最后的build()方法
             .build();
             // 注：

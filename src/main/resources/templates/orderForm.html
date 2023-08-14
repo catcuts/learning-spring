@@ -11,6 +11,9 @@
 <body>
     <h1>Order your cat creations!</h1>
     <img th:src="@{/images/CatCloud.png}"/>
+    <form method="POST" th:action="@{/logout}" id="logoutForm">
+        <input type="submit" value="Logout"/>
+    </form>
 
     <form method="POST" th:action="@{/orders}" th:object="${catOrder}">
 

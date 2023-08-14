@@ -29,6 +29,8 @@ public class DemoApplication implements WebMvcConfigurer {
 		// 这种方式适用于不需要进行业务处理，只需要返回一个页面的情况，
 		// 在这种情况下，不需要自己创建一个控制器类，只需如下将路由与视图绑定即可。
 		registry.addViewController("/anotherhome").setViewName("home");
+        // 将 /login 请求映射到 login 视图，同理。
+        registry.addViewController("/login")/*.setViewName("login")  // 如果视图名与请求路径相同，那么可以省略 setViewName() 方法*/;
 	}
 
 }

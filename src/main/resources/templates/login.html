@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cat Cloud</title>
+    <link rel="stylesheet" th:href="@{/styles.css}">
+</head>
+<body>
+    <h1>Login</h1>
+    <img th:src="@{/images/CatCloud.png}"/>
+
+    <div th:if = "${error}">
+        Unable to login. Check your username and password.
+    </div>
+
+    <p>New here? Click <a th:href="@{/register}">here</a> to register.</p>
+
+    <form method="POST" th:action="@{/login}" id="loginForm">
+        <!-- 
+            使用 th:name="${_csrf.parameterName}" 和 th:value="${_csrf.token}"，
+            这样 Thymeleaf 就会自动将 CSRF Token 添加到表单中，并且保存到会话中，从而在相同会话中的其他表单提交时也能够使用。
+            CSRF配置说明可参考：
+            https://stackoverflow.com/a/31032428
+            https://juejin.cn/post/6844904162451439624 
+        -->
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+        <label for="username">Username: </label>
+        <input type="text" name="username" id="username"><br/>
+
+        <label for="password">Password: </label>
+        <input type="password" name="password" id="password"><br/>
+
+        <input type="submit" value="Login"/>
+    </form>
+</body>
+</html>

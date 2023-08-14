@@ -11,8 +11,14 @@
 <body>
     <h1>Design your cat!</h1>
     <img th:src="@{/images/CatCloud.png}" />
+    <form method="POST" th:action="@{/logout}" id="logoutForm">
+        <input type="submit" value="Logout"/>
+    </form>
 
-    <form method="POST" th:object="${cat}">
+    <!-- 为了确保 CSRF Token 能够被携带到请求中，需要使表单的提交路径为一个绝对地址，
+        这样 Thymeleaf 才能识别这是一个提交动作，而不是一个相对路径的跳转动作，
+        从而自动将 CSRF Token 添加到表单中 -->
+    <form method="POST" th:object="${cat}" th:action="@{/design}">
         <div class="grid">
             <div th:each="ingredientMap : ${ingredientsMap}" 
                 class="ingredient-group" th:id="${ingredientMap.key}"
