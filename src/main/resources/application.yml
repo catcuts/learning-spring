@@ -10,3 +10,10 @@ spring:
     jpa:
         # 是否将数据的初始化推迟到数据库被访问时，因为使用 h2 如果不推迟那么数据初始化会发生在 spring 启动时，而此时数据库还没有被创建，因此会报错。
         defer-datasource-initialization: true
+    security:
+        oauth2:
+            client:
+                registration:
+                    github:
+                        clientId: 7e2bf76ae81315e59be2
+                        clientSecret: e27cbc5b0cdafd6634a6808e8713f05dd7e3bac1

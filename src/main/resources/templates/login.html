@@ -18,6 +18,8 @@
 
     <p>New here? Click <a th:href="@{/register}">here</a> to register.</p>
 
+    <a th:href="@{/oauth2/authorization/github}">Sign in with Github</a>
+
     <form method="POST" th:action="@{/login}" id="loginForm">
         <!-- 
             使用 th:name="${_csrf.parameterName}" 和 th:value="${_csrf.token}"，

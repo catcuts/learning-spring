@@ -17,9 +17,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 
-
-
-
 import com.example.demo.domain.User;
 import com.example.demo.repository.UserRepository;
 
@@ -67,6 +64,9 @@ public class SecurityConfiguration {
                     .loginPage("/login")                 // 指定登录页面
                     .defaultSuccessUrl("/design", true)  // 指定登录成功后的默认跳转页面
                                                          //   第二个参数表示是否总是使用这个默认跳转页面，即使用户在登录前访问了其他页面
+            .and()
+                .oauth2Login()
+                    .loginPage("/login")
             .and()  // 然后
                 .logout()                                // 对于退出登录
                     .logoutSuccessUrl("/login")          // 指定退出登录成功后的默认跳转页面
