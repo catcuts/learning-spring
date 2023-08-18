@@ -17,6 +17,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.OneToMany;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 
 // 如果使用 Spring Data JPA 那么需要用上面两个注解代替 Spring Data JDBC 的下面两个注解
 // import org.springframework.data.relational.core.mapping.Table;
@@ -79,6 +81,14 @@ public class CatOrder implements Serializable {
         message="Invalid CVV"
     )  // 使用 @Digits 注解来验证 ccCVV 属性的值是否是一个三位数
     private String ccCVV;
+
+    @ManyToOne  // @ManyToOne 注解声明了这个实体类（CatOrder）与另一个实体类（User）建立的数据表上的多对一关系，
+                // 也就是 CatOrder 表与 User 表之间通过 CatOrder 表的 user_id 字段建立的多对一关系，
+                // 即一个 CatOrder 对象只能属于一个 User 对象，它们被放入 user 属性中，
+                // 另一方面，也意味着一个 User 对象可以拥有多个 CatOrder 对象，
+                //          如果在 User 对象中声明了一个 List<CatOrder> orders 属性，并且使用 @OneToMany 注解，
+                //          那么这个 User 对象拥有的多个 CatOrder 对象将被放入 orders 属性中。
+    private User user;
 
     @OneToMany(cascade = CascadeType.ALL)  // @OneToMany 注解声明了这个实体类（CatOrder）与另一个实体类（Cat）建立的数据表上的一对多关系，
                                            // 也就是 CatOrder 表与 Cat 表之间通过 CatOrder 表的 id 字段建立的一对多关系，
