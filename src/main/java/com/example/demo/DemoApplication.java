@@ -31,6 +31,8 @@ public class DemoApplication implements WebMvcConfigurer {
 		registry.addViewController("/anotherhome").setViewName("home");
         // 将 /login 请求映射到 login 视图，同理。
         registry.addViewController("/login")/*.setViewName("login")  // 如果视图名与请求路径相同，那么可以省略 setViewName() 方法*/;
+        // 将 /admin 请求映射到 admin 视图，同理。
+        registry.addViewController("/admin")/*可省略.setViewName("admin")*/;
 	}
 
 }
