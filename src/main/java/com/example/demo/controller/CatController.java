@@ -8,8 +8,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.domain.Cat;
@@ -69,6 +72,13 @@ public class CatController {
         //    因为 CatRepository 继承自 PagingAndSortingRepository 又继承自 CrudRepository， 
         //    而 CrudRepository 的 findById() 方法返回的就是 Optional<T> 类型。
         return catRepo.findById(id);
+    }
+
+    @PostMapping(consumes = "application/json")  // 对于 POST 请求，并且请求内容类型是 application/json
+    @ResponseStatus(HttpStatus.CREATED)          // 返回 201 状态码，表示请求成功而且还创建了新资源
+    public Cat postCat(@RequestBody Cat cat) {   // 基于提交的数据创建并保存 Cat 对象
+        // 注：@RequestBody 注解表示请求体 body 中的内容会被反序列化为 Cat 对象，从而可以通过 cat 对象获取请求体中的内容。
+        return catRepo.save(cat);
     }
 
 }
