@@ -12,6 +12,9 @@ spring:
         defer-datasource-initialization: true
     security:
         oauth2:
+            resourceserver:
+                jwt:
+                    jwk-set-uri: http://localhost:8000/oauth2/jwks
             client:
                 registration:
                     github:

@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -59,9 +60,14 @@ public class SecurityConfiguration {
             .authorizeRequests()                // 对于认证 HTTP 请求时
                 .antMatchers("/design", "/orders")  // 若匹配这些请求
                     .hasRole("USER")                //   则要求用户具有 USER 角色（USER 权限）
+                .antMatchers(HttpMethod.POST, "/api/ingredients")  // 若匹配这些请求（新增ingredient）
+                    .hasAuthority("SCOPE_writeIngredients")        // 则要求用户具有 SCOPE_writeIngredients 权限
+                .antMatchers(HttpMethod.DELETE, "api/ingredients") // 若匹配这些请求（删除ingredient）
+                    .hasAuthority("SCOPE_deleteIngredients")       // 则要求用户具有 SCOPE_deleteIngredients 权限
                 .antMatchers("/", "/**")            // 若匹配这些请求
                     .permitAll()                    //   则允许所有用户访问
             .and()  // 然后
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt())
                 .formLogin()                             // 对于表单登录（基于表单的认证方式）
                     .loginPage("/login")                 // 指定登录页面
                     .defaultSuccessUrl("/design", true)  // 指定登录成功后的默认跳转页面
@@ -72,6 +78,9 @@ public class SecurityConfiguration {
             .and()  // 然后
                 .logout()                                // 对于退出登录
                     .logoutSuccessUrl("/login")          // 指定退出登录成功后的默认跳转页面
+            .and()  // 然后
+                .csrf()  // 配置 CSRF 保护以预防 CSRF 攻击（Cross-Site Request Forgery，跨站请求伪造）
+                    .ignoringAntMatchers("/api/**")  // 忽略对于这些请求的 CSRF 保护（api请求不需要CSRF保护）
             .and()  // and() 方法用于连接多个配置或最后的build()方法
             .build();
             // 注：
