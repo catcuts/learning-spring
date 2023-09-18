@@ -16,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 
@@ -73,8 +74,8 @@ public class SecurityConfiguration {
                     .defaultSuccessUrl("/design", true)  // 指定登录成功后的默认跳转页面
                                                          //   第二个参数表示是否总是使用这个默认跳转页面，即使用户在登录前访问了其他页面
             .and()
-                .oauth2Login()
-                    .loginPage("/login")
+                .oauth2Login()            // 配置OAuth2登录
+                    .loginPage("/login")  // 指定登录页面为 /login
             .and()  // 然后
                 .logout()                                // 对于退出登录
                     .logoutSuccessUrl("/login")          // 指定退出登录成功后的默认跳转页面
@@ -123,6 +124,19 @@ public class SecurityConfiguration {
             //          .build();
             //      这里的 sPEL（Spring 表达式语言）是一种表达式语言，用于在运行时计算值或对象图，例如：
 
+    }
+
+    @Bean
+    public SecurityFilterChain defaultFilterChain(HttpSecurity http) throws Exception {
+        return http
+            .authorizeRequests(
+                authorizeRequests -> authorizeRequests.anyRequest().authenticated()
+            )
+            .oauth2Login(
+                oauth2Login -> oauth2Login.loginPage("/oauth2/authorization/cat-admin-client")
+            )
+            .oauth2Client(Customizer.withDefaults())
+            .build();
     }
 
 }

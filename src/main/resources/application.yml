@@ -12,11 +12,44 @@ spring:
         defer-datasource-initialization: true
     security:
         oauth2:
+            # OAuth2 资源服务器配置
             resourceserver:
+                # jwt 配置
                 jwt:
-                    jwk-set-uri: http://localhost:8000/oauth2/jwks
+                    jwk-set-uri: http://localhost:8000/oauth2/jwks  # 指定 jwt 公钥集的地址，用于获取 jwt 公钥，以便于校验 jwt 的合法性
+                                                                    # 注：授权服务器用私钥对其发放的 jwt 进行签名，同时公开公钥（例如通过公钥集地址获取），
+                                                                    #     该公钥可用于对该 jwt 的签名进行验证，从而确保该 jwt 来自受信任的授权服务器。
+            # OAuth2 客户端配置
             client:
+                # 客户端注册信息
                 registration:
                     github:
                         clientId: 7e2bf76ae81315e59be2
                         clientSecret: e27cbc5b0cdafd6634a6808e8713f05dd7e3bac1
+                    cat-admin-client:
+                        # 指定使用的 OAuth2 服务提供商，具体信息在下面的 provider 之下同名配置中
+                        provider: catcloud
+                        # 设定客户端 id 和 密钥，用于登录授权服务器以申请授权码
+                        clientId: cat-admin-client
+                        clientSecret: secret
+                        # 指定授权类型为授权码模式（authorization_code）
+                        authorizationGrantType: authorization_code
+                        # 指定登录并申请授权码成功后的回调地址，即登录成功后将授权码返回给该地址（回调时会携带url参数code=授权码）
+                        redirectUri: http://127.0.0.1:8089/login/oauth2/code/{registrationId}
+                        # 指定客户端可访问的资源范围，即授权成功后可访问的资源范围
+                        scope: writeIngredients,deleteIngredients,openid
+                # OAuth2 服务提供商信息
+                provider:
+                    catcloud:
+                        # 授权服务器地址
+                        issuer-uri: http://localhost:8000
+                        # 授权申请地址（对于授权码模式，即授权码申请地址）
+                        authorization-uri: http://localhost:8000/oauth2/authorize
+                        # 令牌申请地址（对于授权码模式，即授权码申请成功后，用于申请访问令牌的地址）
+                        token-uri: http://localhost:8000/oauth2/token
+                        # 令牌校验地址（对于授权码模式，即授权码申请成功后，用于校验访问令牌的地址）
+                        jwk-set-uri: http://localhost:8000/oauth2/jwks
+                        # 用户信息获取地址
+                        user-info-uri: http://localhost:8000/userinfo
+                        # 用户名属性名称，即在用户信息中，用于标识用户名的属性名称
+                        user-name-attribute: sub
